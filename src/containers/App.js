@@ -1,6 +1,7 @@
 import React, { Component } from 'react'; 
 import './App.css';
-import Person from './Person/Person'; 
+import Persons from '../components/Persons/Persons'; 
+import Cockpit from '../components/Cockpit/Cockpit';
 
 //creating javascript class with the keyword "class"
 //and using the "extends" keyword to inherhit from the component object/class
@@ -15,7 +16,7 @@ class App extends Component {
       { id: 'asdas11', name: 'Sara', age: 24},
       { id: 'asdas111', name: 'Optiplan', age: 16},
     ],
-    cantTouchThis: 'Wont be affected in switchNameHandler if we dont directly define to do it',
+    otherState: 'Wont be affected in switchNameHandler if we dont directly define to do it',
     showPersons: false
   }
 
@@ -38,7 +39,7 @@ class App extends Component {
 
     //can manipulate person without changing the original object/array
     person.name = event.target.value;
-
+ 
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
@@ -62,43 +63,24 @@ class App extends Component {
 
   //this call upon the state/functions in the class
   render() {   
-    //style here instead of using css "inline style"
-    const styleButton = {
-      backgroundColor: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    };
-
 
     //map i javascript är som select för linq
     let persons = null;
 
-    if(this.state.showPersons){
-      persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return <Person 
-              click={() => this.deletePersonHandler(index)}
-              name={person.name} 
-              age={person.age} 
-              key={person.id} //so react only renders the one needed and not the whole list
-              changed={(event) => this.nameChangedHandler(event, person.id )}
-              />
-          })}
-        </div>
-      );
-    }
+    if(this.state.showPersons)
+      persons = <Persons 
+            persons={this.state.persons}
+            clicked={this.deletePersonHandler}
+            changed={this.nameChangedHandler} />
 
     return (
         <div className="App">
-            <h1>Test of a React App</h1>
-            <p>Adding a paragraph</p> 
-            <button
-              style={styleButton} 
-              onClick={this.togglePersonsHandler}>Toggle person</button>
-              {persons}
+          <Cockpit 
+            title={this.props.appTitle}
+            showPersons={this.state.showPersons} 
+            persons={this.state.persons} 
+            clicked={this.togglePersonsHandler}/>
+          {persons}
         </div>
     );
   }
